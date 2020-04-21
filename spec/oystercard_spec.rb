@@ -2,6 +2,8 @@ require 'oystercard'
 
 describe Oystercard do
 
+  let(:station) { double :Station}
+
   before(:each) { subject.top_up(Oystercard::MINIMUM_VALUE) }
 
   it '#top_up should be able to add to the balance' do
@@ -14,7 +16,7 @@ describe Oystercard do
 
   it 'should have balance limit of 90' do
     message = "Balance limit reached: #{Oystercard::LIMIT}"
-    expect { subject.top_up(91) }.to raise_error message
+    expect { subject.top_up(Oystercard::LIMIT) }.to raise_error message
   end
 
   it 'should be able to #deduct from balance' do
@@ -47,9 +49,14 @@ describe Oystercard do
     expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_VALUE)
   end
 
-  it 'should know name of the station up on #touch_in' do
-    subject.touch_in("station")
-    expect(subject.entry_station).to eq("station")
+  it 'should upon #touch_in remember station name' do
+    expect((subject.touch_in station)).to eq station
+  end
+
+  it 'should set entry station to nil upon #touch_out' do
+    subject.touch_in station
+    subject.touch_out
+    expect(subject.entry_station).to eq nil
   end
 
 end
