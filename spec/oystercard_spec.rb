@@ -23,29 +23,30 @@ describe Oystercard do
     expect(subject.deduct(Oystercard::MINIMUM_VALUE)).to eq 0
   end
 
-  it { is_expected.to respond_to :in_journey }
+  it { is_expected.to respond_to :in_journey? }
 
   it 'when card created #in_journey should be eq to false' do
     expect(subject.in_journey?).to eq false
   end
 
   it 'should change @in_journey to true when #touch_in' do
-    subject.touch_in 'station'
+    subject.touch_in station
     expect(subject.in_journey?).to eq true 
   end
 
   it 'should change @in_journey to false when #touch_out' do
-    expect(subject.touch_out).to eq false
+    subject.touch_out station
+    expect(subject.in_journey?).to eq false
   end
 
   it 'should have a minimum of a 1£ when #touch_in' do 
     subject.deduct(Oystercard::MINIMUM_VALUE)
     message = "Balance bellow minimum"
-    expect { subject.touch_in("station") }.to raise_error message
+    expect { subject.touch_in station }.to raise_error message
   end
 
   it 'should be able to charge for the journey' do 
-    expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_VALUE)
+    expect { subject.touch_out station }.to change{ subject.balance }.by(-Oystercard::MINIMUM_VALUE)
   end
 
   it 'should upon #touch_in remember station name' do
@@ -54,8 +55,14 @@ describe Oystercard do
 
   it 'should set entry station to nil upon #touch_out' do
     subject.touch_in station
-    subject.touch_out
+    subject.touch_out station
     expect(subject.entry_station).to eq nil
+  end
+
+  it 'should save trip upon #touch_out and remember history' do
+    subject.touch_in station
+    subject.touch_out station
+    expect(subject.journey_history.empty?).to eq false
   end
 
 end
