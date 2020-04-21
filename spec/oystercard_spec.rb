@@ -26,16 +26,15 @@ describe Oystercard do
   it { is_expected.to respond_to :in_journey }
 
   it 'when card created #in_journey should be eq to false' do
-    expect(subject.in_journey).to eq false
+    expect(subject.in_journey?).to eq false
   end
 
   it 'should change @in_journey to true when #touch_in' do
     subject.touch_in 'station'
-    expect(subject.in_journey).to eq true 
+    expect(subject.in_journey?).to eq true 
   end
 
   it 'should change @in_journey to false when #touch_out' do
-    subject.touch_in "station"
     expect(subject.touch_out).to eq false
   end
 

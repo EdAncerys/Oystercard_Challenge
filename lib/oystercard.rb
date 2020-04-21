@@ -7,7 +7,6 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @in_journey = false
   end
 
   def top_up(value)
@@ -19,11 +18,14 @@ class Oystercard
   def deduct(value)
     @balance -= value
   end
+
+  def in_journey?
+    !!entry_station
+  end
   
   def touch_in(station)
     fail "Balance bellow minimum" if balance < MINIMUM_VALUE
 
-    @in_journey = true
     @entry_station = station
   end
   
