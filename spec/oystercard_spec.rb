@@ -20,7 +20,7 @@ describe Oystercard do
   end
 
   it 'should be able to #deduct from balance' do
-    expect(subject.deduct(Oystercard::MINIMUM_VALUE)).to eq 0
+    expect { subject.touch_out station }.to change{ subject.balance }.by( -Oystercard::MINIMUM_VALUE)
   end
 
   it { is_expected.to respond_to :in_journey? }
@@ -40,9 +40,8 @@ describe Oystercard do
   end
 
   it 'should have a minimum of a 1£ when #touch_in' do 
-    subject.deduct(Oystercard::MINIMUM_VALUE)
-    message = "Balance bellow minimum"
-    expect { subject.touch_in station }.to raise_error message
+    subject.touch_in station
+    expect(subject.balance).to eq Oystercard::MINIMUM_VALUE
   end
 
   it 'should be able to charge for the journey' do 
@@ -60,6 +59,16 @@ describe Oystercard do
   end
 
   it 'should save trip upon #touch_out and remember history' do
+    subject.touch_in station
+    subject.touch_out station
+    expect(subject.journey_history.empty?).to eq false
+  end
+
+  it 'should have journey_history emty upon start' do
+    expect(subject.journey_history.empty?).to eq true
+  end
+
+  it 'shout have journey_history after a travel' do
     subject.touch_in station
     subject.touch_out station
     expect(subject.journey_history.empty?).to eq false
