@@ -1,7 +1,7 @@
 class Station
-
-  def zone
-    # @zone = {:zone1 => ["Baker St.", "Paddington", "Oxford St."]}
+  attr_reader :name, :zone
+  def initialize(name: "", zone: 0)
+    @name = name
+    @zone = zone
   end
-  
 end

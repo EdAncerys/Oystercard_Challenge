@@ -2,8 +2,14 @@ require 'station'
 
 describe Station do
 
-  it 'should return list of stations' do
-    expect(subject.zone).to eq nil
+  subject { described_class.new(name: "Kings cross", zone: 1)}
+  
+  it 'has a name' do
+    expect(subject.name).to eq "Kings cross"
+  end
+
+  it 'has a zone' do
+    expect(subject.zone).to eq 1
   end
 
 end
