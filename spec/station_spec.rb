@@ -1,5 +1,9 @@
 require 'station'
 
-# describe Station
+describe Station do
 
-# end
+  it 'should return list of stations' do
+    expect(subject.zone).to eq nil
+  end
+
+end
